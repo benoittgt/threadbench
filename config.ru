@@ -41,20 +41,24 @@ end
 
 STATS = []
 
+$collector = Vernier::Collector.new(:wall)
+$collector.start
 APP = lambda do |env|
-  STATS << Benchmark.realtime do
-    ticks_remaining = Integer(RESPONSE_TIME_SECONDS/TICK_RATE_SECONDS)
+  $collector.record_interval("request") do
+    STATS << Benchmark.realtime do # Make version without Benchmark
+      ticks_remaining = Integer(RESPONSE_TIME_SECONDS/TICK_RATE_SECONDS)
 
-    GARBAGE_OBJECTS_COUNT.times { "a" } # simulate creating + discarding objects for each request
+      GARBAGE_OBJECTS_COUNT.times { "a" } # simulate creating + discarding objects for each request
 
-    until ticks_remaining == 0
-      case rand(0.0..1.0)
-      when (0.0..CPU_RATIO)
-        cpu_spin(TICK_RATE_SECONDS)
-      else
-        sleep(TICK_RATE_SECONDS)
+      until ticks_remaining == 0
+        case rand(0.0..1.0)
+        when (0.0..CPU_RATIO)
+          cpu_spin(TICK_RATE_SECONDS)
+        else
+          sleep(TICK_RATE_SECONDS)
+        end
+        ticks_remaining -= 1
       end
-      ticks_remaining -= 1
     end
   end
 
@@ -81,6 +85,11 @@ def print_stats
 end
 
 at_exit do
+  puts "🦑 Vernier collector is running, stopping..."
+  pp $collector.inspect
+  puts "🦑 Vernier collector is running, stopping..."
+  result = $collector.stop
+  File.write("profile.json", Vernier::Output::Firefox.new(result).output)
   print_stats
 end
 

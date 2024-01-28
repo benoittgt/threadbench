@@ -28,4 +28,4 @@ We use a [open model](https://k6.io/docs/using-k6/scenarios/concepts/open-vs-clo
 There are two benchmarks:
 
 * `bin/bench` is a ramping breakpoint test. It ramps the arrival rate of requests from 2/sec upward, and stops the benchmark when it's failure conditions have been met.
-* `bin/constant` is a constant rate test. It will send requests at a constant rate.
+* `bin/bench_constant` is a constant rate test. It will send requests at a constant rate.

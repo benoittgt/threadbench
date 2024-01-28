@@ -16,7 +16,7 @@ export const options = {
       // Pre-allocate necessary VUs.
       preAllocatedVUs: 10,
 
-      duration: '30s'
+      duration: '2s'
     },
   },
 };

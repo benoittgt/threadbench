@@ -21,6 +21,7 @@ def fibonacci(i)
 end
 
 require "benchmark"
+require "vernier"
 FIB_DEPTH = 15
 # We compute how long our loop take without thread preemption nor GC, so we can
 # perform a constant amount of work every time.
